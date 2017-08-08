@@ -1,0 +1,169 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sensor IoT</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
+    <table>
+    <!-- Firebase v3 API -->
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "CqPkvCld78bdYjqrvA2mKicvWMk5IDOXiRZHcxiA", 
+        authDomain: "modifytest-aace2.firebaseio.com/",
+        databaseURL: "https://modifytest-aace2.firebaseio.com/"};
+      
+      firebase.initializeApp(config);
+
+      window.addEventListener('load', function()
+      {
+         // set up query to receive callbacks when new sensor readings are posted
+        firebase.database().ref('Sensor').on('value', function(data) 
+	    {
+		  var sensor = data.val();  // retrieve new sensor readings
+          
+          // create the HTML to display new readings and update the page
+          document.getElementById('tempdata').innerHTML=
+		  
+			"<p class='boxed'><em> Temp : "     + sensor.temp + " &deg;C</em></p>" +
+			"<p class='boxed'><em> Humi : "     + sensor.humi + " % </p>" + 
+			"<p class='boxed'><em> Light : "     + sensor.light + " Sl </p>" +
+			"<p class='boxed'><em> Status Light : "     + sensor.Status_Light + "  </p>"
+		 
+           mydataTemp.setValue(0, 1, sensor.temp); // update gauge data with latest temp reading
+           chartTemp.draw(mydataTemp, myoptionsTemp);      // re-draw gauge
+		   
+		   mydataHumi.setValue(0, 1, sensor.humi); // update gauge data with latest temp reading
+           chartHumi.draw(mydataHumi, myoptionsHumi);      // re-draw gauge
+		   
+		   mydataLight.setValue(0, 1, sensor.light); // update gauge data with latest temp reading
+           chartLight.draw(mydataLight, myoptionsLight);      // re-draw gauge
+		   
+		   mydataStatus_LightLight.setValue(0, 1, sensor.Status_LightLight); // update gauge data with latest temp reading
+           chartStatus_LightLight.draw(mydataStatus_LightLight, myoptionsStatus_LightLight);      // re-draw gauge
+	    });
+      }); // load event
+    </script> 
+    
+    <!-- Gauge style chart -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      // Following creates the temperature gauge
+      google.charts.load('current', {'packages':['gauge']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() 
+      {
+        mydataTemp = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Temp' , 0]
+          ]);
+
+        myoptionsTemp = {
+          width: 300, height: 300,
+		  redColor: '#ff471a',
+          redFrom: 40, redTo: 55,
+		  yellowColor: '#ffff33',
+          yellowFrom:30, yellowTo: 40,
+		  greenColor: '#99e6ff',
+		  greenFrom: -10, greenTo: 0,
+		  max: 50,
+		  min: -10,
+		  minorTicks: 5,
+          majorTicks: ['-10','-5','0','','10','','20','','30','','40','','50']};
+
+        chartTemp = new google.visualization.Gauge(document.getElementById('chart_temp'));
+
+        chartTemp.draw(mydataTemp, myoptionsTemp);  
+      }
+    </script>  
+	
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	 <script type="text/javascript">
+      // Following creates the temperature gauge
+      google.charts.load('current', {'packages':['gauge']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() 
+      {
+        mydataHumi = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Humi' , 0]
+          ]);
+
+        myoptionsHumi = {
+          width: 300, height: 300,
+		  redColor: '#ff471a',
+          //redFrom: 40, redTo: 55,
+		  //yellowColor: '#ffff33',
+          //yellowFrom:30, yellowTo: 40,
+		  //greenColor: '#99e6ff',
+		  //greenFrom: -10, greenTo: 0,
+		  max: 100,
+		  min: 0,
+		  minorTicks: 5,
+          majorTicks: ['0','','10','','20','','30','','40','','50','','60','','70','','80','','90','','100']};
+
+        chartHumi = new google.visualization.Gauge(document.getElementById('chart_humi'));
+
+        chartHumi.draw(mydataHumi, myoptionsHumi)
+      }
+    </script>  
+	
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	 <script type="text/javascript">
+      // Following creates the temperature gauge
+      google.charts.load('current', {'packages':['gauge']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() 
+      {
+        mydataLight = google.visualization.arrayToDataTable([
+          ['Label', 'Value'],
+          ['Light' , 0]
+          ]);
+
+        myoptionsLight = {
+          width: 300, height: 300,
+		  redColor: '#ff471a',
+          //redFrom: 40, redTo: 55,
+		  //yellowColor: '#ffff33',
+          //yellowFrom:30, yellowTo: 40,
+		  //greenColor: '#99e6ff',
+		  //greenFrom: -10, greenTo: 0,
+		  max: 1200,
+		  min: 0,
+		  minorTicks: 5,
+          majorTicks: ['0','','200','','400','','600','','800','','1000','','1200',]};
+
+        chartLight = new google.visualization.Gauge(document.getElementById('chart_light'));
+
+        chartLight.draw(mydataLight, myoptionsLight)
+      }
+    </script>  
+  </head>
+  <body>
+    <div class="page_content">
+      <header>
+        <h1>Sensor </h1>
+      </header>
+      <div id="tempdata">
+        <p class="boxed"><em> Temp: 0 &deg;C </em></p>
+        <p class="boxed"><em> Humi: 0 &deg;C </em></p>
+		<p class="boxed"><em> Light: 0 &deg;C </em></p>
+      </div>
+      <div id="chart_con">
+        <div id="chart_temp">
+        </div>
+      </div>
+	 <div id="chart_con">
+        <div id="chart_humi">
+        </div>
+      </div>
+	  <div id="chart_con">
+        <div id="chart_light">
+        </div>
+      </div>
+    </div>
+  </body>
+  </table>
+</html>
