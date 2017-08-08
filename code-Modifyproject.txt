@@ -1,0 +1,207 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <ESP8266WiFi.h>
+#include <FirebaseArduino.h>
+#include <DHT.h>
+#include <ESP8266WiFiMulti.h>
+#include <ESP8266HTTPClient.h>
+
+
+ESP8266WiFiMulti WiFiMulti;
+
+// Config Firebase
+#define FIREBASE_HOST "modifytest-aace2.firebaseio.com"
+#define FIREBASE_AUTH "CqPkvCld78bdYjqrvA2mKicvWMk5IDOXiRZHcxiA"
+
+
+// Use web browser to view and copy
+// SHA1 fingerprint of the certificate
+#define finger  "?C6 9A EF 04 30 CE 73 EC F3 51 A4 4D D3 B0 99 81 9E 32 72 37"
+
+// Config connect WiFi
+#define WIFI_SSID "gg"
+#define WIFI_PASSWORD "1234567890"
+
+
+// Config DHT
+#define DHTPIN D3
+#define DHTTYPE DHT22
+//sleep
+#define SECONDS_DS(seconds) ((seconds)*1000000UL)
+//Light
+int LDR_pin = 0;
+int LDR_value = 0;
+int l = 0;
+int Relay = D4;
+//int lcd_backlight = D5;
+
+// Set the LCD address to 0x27 in PCF8574 by NXP and Set to 0x3F in PCF8574A
+LiquidCrystal_I2C lcd(0x3F, 16, 2);
+
+String name;
+DHT dht(DHTPIN, DHTTYPE);
+int count = 0;
+
+void setup() {
+  //pinMode(lcd_backlight,OUTPUT);
+  //digitalWrite(lcd_backlight, HIGH);
+  
+  lcd.begin();
+  Serial.begin(9600);
+  //lcd.backlight();
+  
+  
+  
+  pinMode(Relay , OUTPUT);
+  WiFi.mode(WIFI_STA);
+  // connect to wifi.
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("connecting");
+  lcd.setCursor(0, 0);
+  lcd.print("Connecting");
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    lcd.print(".");
+    delay(500);
+  }
+  Serial.println();
+  Serial.print("connected: ");
+  Serial.println(WiFi.localIP());
+  lcd.setCursor(0, 1);
+  lcd.print("IP:");lcd.print(WiFi.localIP());
+  delay(2000);
+
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+  Serial.println("Setup...");
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Hello...User!!!");
+  dht.begin();
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  // Read temp & Humidity for DHT22
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  LDR_value = analogRead(LDR_pin);
+  l= 1024 - LDR_value;
+   
+  Serial.println(count);
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Failed to read from DHT sensor!");
+    lcd.setCursor(0, 0);
+    lcd.print("Failed to read from DHT sensor!");
+    
+    delay(500);
+    lcd.clear();
+    return;
+  }     
+  
+    
+
+  // append a new value to /temperature
+   Firebase.setFloat("Sensor/temp", t);
+  if (Firebase.failed()) {
+      Serial.print("pushing /temperature failed:");
+      Serial.println(Firebase.error());  
+      return;
+  }
+  Serial.print("pushed: /temperature/");
+  Serial.println(Firebase.getFloat("Sensor/temp"));
+  lcd.setCursor(0, 0);
+  lcd.print("T=");lcd.print(t,1);lcd.print((char)223);lcd.print("C,");
+
+  // append a new value to /temperature
+   Firebase.setFloat("Sensor/humi", h);
+  if (Firebase.failed()) {
+      Serial.print("pushing /humidity failed:");
+      Serial.println(Firebase.error());  
+      return;
+  }
+  Serial.print("pushed: /humidity/");
+  Serial.println(Firebase.getFloat("Sensor/humi"));
+  lcd.setCursor(9, 0);
+  lcd.print("H=");lcd.print(h,1);lcd.print("%");
+  
+  
+    Firebase.setInt("Sensor/light", l);
+  if (Firebase.failed()) {
+      Serial.print("pushing /light failed:");
+      Serial.println(Firebase.error());  
+      return;
+  }
+  
+  Serial.print("pushed: /light/");
+  Serial.println(Firebase.getInt("Sensor/light"));
+  lcd.setCursor(0, 1);
+  lcd.print("L=");lcd.print(l);lcd.print(" Sl  ");
+
+  if (l>500) {
+    digitalWrite(Relay, LOW);
+    Firebase.setString("Sensor/Status_Light", "OFF");
+  }
+  else {
+    digitalWrite(Relay, HIGH);
+    Firebase.setString("Sensor/Status_Light", "ON");
+  }
+  
+  if(count == 4000){
+    //add data to data base
+    if ((WiFiMulti.run() == WL_CONNECTED)) {
+    HTTPClient http;
+    String url = "https://modifyproject.tk/uplode.php?temp="+String(t)+"&humi="+String(h)+"&light="+String(l);
+    //String url = "http://35.187.225.150/uplode.php?temp="+String(t)+String("&humi=")+String(h)+String("&light=")+String(l);
+    Serial.println(url);
+    http.begin(url,finger); //HTTP
+
+    int httpCode = http.GET();
+    if (httpCode > 0) {
+    Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+    if (httpCode == HTTP_CODE_OK) {
+    String payload = http.getString();
+    Serial.println(payload);
+    }
+    } else {
+    Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    }
+    http.end();
+    }
+    
+    StaticJsonBuffer<200> jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
+  root["temperature"] = t;
+  root["humidity"] = h;
+  root["light"] = l;
+  
+  // append a new value to /logDHT
+  String name = Firebase.push("Status/DHT", root);
+  // handle error
+  if (Firebase.failed()) {
+      Serial.print("pushing /Status/DHT failed:");
+      Serial.println(Firebase.error());  
+      return;
+  }
+  Serial.print("pushed: /Status/DHT/");
+  Serial.println(name);
+  count = 0;
+  //delay(1000);
+  //Serial.println("Sleeping");
+  //lcd.clear();
+  //lcd.setCursor(3, 0);
+  //lcd.print("Sleep Mode");
+  //delay(2000);
+  //lcd.clear();
+  //digitalWrite(lcd_backlight, LOW);
+  
+  //ESP.deepSleep(SECONDS_DS(10));
+  
+  }
+  else
+    count = count + 1000;
+    
+
+  //delay(500);
+}
