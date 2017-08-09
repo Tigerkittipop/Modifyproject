@@ -91,3 +91,16 @@
 และ ถ้าค่าแสงน้อยกว่า500(<500) MCU จะสั่งให้หลอดไฟติด
 
 โดยผ่านวงจรรีเรย์
+
+# สมาชิกกลุ่ม
+ ![alt text](https://scontent.fbkk13-1.fna.fbcdn.net/v/t34.0-12/20732888_1636241733085203_2083336209_n.jpg?oh=2c3778602c8d10917b50ae76a2fe71d2&oe=598C5551)
+ 
+ Mr.Kridsada  Wungsan
+ 
+ Mr.Sarawut   Khunyotying
+ 
+ Mr.Pratchaya Mueangmanoi
+
+ Mr.Thanakrit Tasuwan/n
+ Mr.Kittipop Tejapromma
+ 
