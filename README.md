@@ -42,13 +42,17 @@
   
   การต่อสาย ขา I2C ของ NodeMCU คือ
       - SCL - D1
+     
       - SDA - D2
   จอ LCD ส่วนมากใช้ไฟ 5V ดังนั้นต้องใช้ไฟ 5V จ่ายให้ คือไฟที่มาจากขา Vin ใน NodeMCU 
 
   การต่อขา NodeMCU LCD
       - Vin - VCC
+      
       - GND - GND
+      
       - D1 - SCL
+      
       - D2 - SDA
    
 
