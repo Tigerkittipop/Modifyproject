@@ -51,7 +51,7 @@
 
 # รูปภาพการวัดค่า SleepMode2
 
-![alt text](https://github.com/Tigerkittipop/Modifyproject/blob/master/Sleep%20Mode2.jpg)
+![alt text](https://github.com/Tigerkittipop/Modifyproject/blob/master/all%20pic/Sleep%20Mode2.jpg)
 
 
 # รูปภาพการวัดค่า SleepMode3
