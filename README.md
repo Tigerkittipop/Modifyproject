@@ -31,6 +31,11 @@
    
    เมื่อต่อเสร็จแล้วนำโค๊ดที่อัพโหลดให้มาทำการดัดแปลงนิดหน่อย ซึ่งจะมีคำอธิบายไว้ไห้แล้ว
    ผลลัพธ์ของโปรแกรมก็จะแสดงออกมาแบบมี error นิดหน่อยเพราะตัว dht11 ของผมมันไม่ดีครับ
+   
+   <a href="http://www.mx7.com/view2/A2vdxskCZbuTzqLV" target="_blank"><img border="0" src="http://www.mx7.com/i/0b3/RFn9iF.PNG" /></a>
+   
+   อย่าลืมเปลี่ยน baud rate นะครับ เพราะใช้ NodeMCU ต้องใช้ baud rate ที่ 115200
+   
 
 
 # รูปภาพการวัดค่า SleepMode1
