@@ -36,8 +36,23 @@
    
    อย่าลืมเปลี่ยน baud rate นะครับ เพราะใช้ NodeMCU ต้องใช้ baud rate ที่ 115200
    
+# วิธีการต่อ NodeMCU ESP8266 แสดงผลออก จอ LCD
+ 
+ ![alt text](https://github.com/Tigerkittipop/Modifyproject/blob/master/all%20pic/2.jpg)
+  
+  การต่อสาย ขา I2C ของ NodeMCU คือ
+      - SCL - D1
+      - SDA - D2
+  จอ LCD ส่วนมากใช้ไฟ 5V ดังนั้นต้องใช้ไฟ 5V จ่ายให้ คือไฟที่มาจากขา Vin ใน NodeMCU 
 
-# การวัดค่า sleep mode
+  การต่อขา NodeMCU LCD
+      - Vin - VCC
+      - GND - GND
+      - D1 - SCL
+      - D2 - SDA
+   
+
+# การวัดค่า sleep moded
 
 การวัดค่า sleep mode สายกราว์ อเดบเตอร์ ต่อ GND ของ node mcu สายไฟ+ของ อเดบเตอร์ ไปต่อเข้ากับ สายไฟ+ของมิเตอร์ กราว์ของมิเตอร์ไปเข้า Vinของ mode mcu ถ้าถอดสาย usb ออกไฟจะเลี้ยงไม่พอ
 
