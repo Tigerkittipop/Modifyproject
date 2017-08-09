@@ -57,16 +57,15 @@
       
       - D2 - SDA
    
-
+# วิธีการดักข้อมูลโดยใช้โปรแกรม Wireshark
+ 
+ ![alt text](https://scontent.fbkk13-1.fna.fbcdn.net/v/t34.0-12/20750438_1550147938378235_831784712_n.png?oh=5fd6c19007f14112af1df8bc02907bd5&oe=598C6B6B)
+ 
 # การวัดค่า sleep moded
 
 การวัดค่า sleep mode สายกราว์ อเดบเตอร์ ต่อ GND ของ node mcu สายไฟ+ของ อเดบเตอร์ ไปต่อเข้ากับ สายไฟ+ของมิเตอร์ กราว์ของมิเตอร์ไปเข้า Vinของ mode mcu ถ้าถอดสาย usb ออกไฟจะเลี้ยงไม่พอ
 
 ![alt text](https://scontent.fbkk13-1.fna.fbcdn.net/v/t34.0-12/20706422_10203632449488293_139098640_n.jpg?oh=b5ed1e80ffeec47abe8ffda05b8c70f1&oe=598D8EC4)
-
-# วิธีการดักข้อมูลโดยใช้โปรแกรม Wireshark
- 
- ![alt text](https://scontent.fbkk13-1.fna.fbcdn.net/v/t34.0-12/20750438_1550147938378235_831784712_n.png?oh=5fd6c19007f14112af1df8bc02907bd5&oe=598C6B6B)
 
 # รูปภาพการวัดค่า SleepMode1
 
