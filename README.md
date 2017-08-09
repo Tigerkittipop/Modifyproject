@@ -41,7 +41,7 @@
 
 การวัดค่า sleep mode สายกราว์ อเดบเตอร์ ต่อ GND ของ node mcu สายไฟ+ของ อเดบเตอร์ ไปต่อเข้ากับ สายไฟ+ของมิเตอร์ กราว์ของมิเตอร์ไปเข้า Vinของ mode mcu ถ้าถอดสาย usb ออกไฟจะเลี้ยงไม่พอ
 
-![alt text](https://scontent.fbkk13-1.fna.fbcdn.net/v/t34.0-12/20707477_10213284768583274_1134417364_n.jpg?oh=8d980262717c9dd2b55f78f91d76c916&oe=598D3B31)
+![alt text](https://scontent.fbkk13-1.fna.fbcdn.net/v/t34.0-12/20706422_10203632449488293_139098640_n.jpg?oh=b5ed1e80ffeec47abe8ffda05b8c70f1&oe=598D8EC4)
 
 
 # รูปภาพการวัดค่า SleepMode1
