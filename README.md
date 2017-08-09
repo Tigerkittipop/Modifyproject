@@ -41,9 +41,11 @@
  ![alt text](https://github.com/Tigerkittipop/Modifyproject/blob/master/all%20pic/2.jpg)
   
   การต่อสาย ขา I2C ของ NodeMCU คือ
+      
       - SCL - D1
      
       - SDA - D2
+      
   จอ LCD ส่วนมากใช้ไฟ 5V ดังนั้นต้องใช้ไฟ 5V จ่ายให้ คือไฟที่มาจากขา Vin ใน NodeMCU 
 
   การต่อขา NodeMCU LCD
@@ -76,3 +78,9 @@
 # รูปภาพการวัดค่า SleepMode3
 
 ![alt text](https://github.com/Tigerkittipop/Modifyproject/blob/master/all%20pic/Sleep%20Mode3.jpg)
+
+
+# ความคิดสร้างสรรค์
+
+![alt text](https://github.com/Tigerkittipop/Modifyproject/blob/master/all%20pic/3.jpg)
+
