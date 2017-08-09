@@ -95,13 +95,13 @@
 
 โดยผ่านวงจรรีเรย์
 
-อุปกรณ์
+# อุปกรณ์
 
-![alt text](https://i.lnwfile.com/_/i/_raw/iu/c4/2m.jpg)
+![alt text](http://csharpcorner.mindcrackerinc.netdna-cdn.com/UploadFile/d15fb8/ldr-with-arduino/Images/LDR.jpg)
 
 1. LDR เป็นตัวต้านทานที่ปรับค่าได้ตามความเข้มของแสง LDR เราสามารถใช้ Arduino อ่านค่าความต้านทานที่เปลี่ยนแปลงตามความเข้มของแสงเพื่อนำไปใช้งานที่ต้องการได้ โดยค่าที่อ่านได้เป็นแบบ อะนาล็อก
 
-![alt text](https://o.lnwfile.com/_/o/_raw/o6/n3/ej.jpg)
+![alt text](https://fb1-o.lnwfile.com/o6n3ej.jpg)
 
 2. 4-Channel Relay รีเลย์ 4 ตัว เพื่อใช้งานในการควบคุมอุปกรณ์ไฟฟ้า รับกระแสได้สูงถึง 10 A ใช้งานได้ทั้งไฟฟ้ากระแสตรง และ กระแสสลับ รับแรงดันระดับ 5 V ตรงจาก Arduino board มี LED แสดงสถานะการทำงานของรีเลย์ ออกแบบให้ป้องกันวงจรด้านควบคุมออกจากด้านกำลังโดยการใช้การส่งผ่านด้วยแสง (Optocoupler) ในทุกตัวรีเลย์
 
