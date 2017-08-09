@@ -1,0 +1,125 @@
+#include "DHT.h"
+#include <AuthClient.h>
+#include <MicroGear.h>
+#include <MQTTClient.h>
+#include <SHA1.h>
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
+#include <EEPROM.h>1
+
+const char* ssid     = "Jk'MarK";   //ชื่อ SSID ของ WiFi ที่จะเชื่อมต่อ
+const char* password = "012304560";           //รหัสผ่านของ WiFi ที่จะเชื่อมต่อ
+
+#define APPID "Teeranai059" //ใส่ APPID ที่สร้างไว้ใน NETPIE
+#define KEY "jOPg27x6zoKYm9p" //ใส่ KEY ที่สร้างไว้สำหรับ SmartSensor
+#define SECRET "V5YPR2SxLBWHSmebclksZUHbV" //ใส่ SECRET ของ KEY ที่สร้างไว้
+#define ALIAS "DHT22" //ตั้งชื่อให้กับอุปกรณ์นี้ (เช่นตอนนี้ผมตั้งชื่อว่า) "SmartSensor"
+
+#define DHTPIN  D5           //ระบุขาที่ต่อกับเซนเซอร์ DHT
+#define LDRPIN  A0           //ระบุขาที่ต่อกับตัวต้านทานปรับค่าตามแสง (LDR)
+#define DHTTYPE   DHT22      //ระบุว่าใช้ DHT11 หรือ DHT22 (ในที่นี้ผมใช้เป็น DHT22)
+#define LDRMax 300 //ปรับค่าสูงสุดของการวัดค่า LDR (หากใช้ตัวต้านทานที่มีค่ามากขึ้น ให้ปรับค่านี้มากขึ้น) 
+#define RefreshTime 100 //ค่าความถี่ของการส่งข้อมูล เช่นในที่นี้คือ ส่งข้อมูลออกไปทุกๆ 0.1 วินาที (100 ms)
+
+//#define SECONDS_DS(seconds) ((seconds)*1000000UL)
+
+
+WiFiClient client;
+AuthClient *authclient;
+
+DHT dht(DHTPIN, DHTTYPE);  
+int timer = 0;
+
+MicroGear microgear(client);
+
+void onConnected(char *attribute, uint8_t* msg, unsigned int msglen) 
+{
+  Serial.println("Connected to NETPIE...");     //หากการเชื่อมต่อสำเร็จ ให้แสดงข้อความนี้ทาง Serial Monitor
+}
+
+void setup() 
+{
+  Serial.begin(115200);
+  Serial.println("Starting...");
+ 
+  dht.begin();  
+ 
+  microgear.on(CONNECTED,onConnected);
+  microgear.init(KEY,SECRET,ALIAS);
+  microgear.connect(APPID);
+
+ if (WiFi.begin(ssid, password)) 
+  {
+ while (WiFi.status() != WL_CONNECTED)
+    {
+ delay(500);
+      Serial.print(".");
+    }
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+  }
+}
+
+void loop() 
+{
+ if (microgear.connected()) 
+    {
+      microgear.loop();
+ 
+      timer=0;
+
+ float tempread = dht.readTemperature();   //เก็บค่าอุณหภูมิที่อ่านได้ไว้เป็นแบบ float ไว้ในตัวแปร "tempread"
+ float humidread = dht.readHumidity();     //เก็บค่าความชื้นที่อ่านได้ไว้เป็นแบบ float ไว้ในตัวแปร "humidread"
+ 
+ char temp[10];     //
+ char humid[10];    // สร้างตัวแปรไว้ใช้ส่งข้อมูลทาง microgear.chat (ต้องใช้รูปแบบ char)
+ char light[10];    //
+ 
+ int LDRread = analogRead(LDRPIN);   //เก็บค่าที่อ่านจาก LDR ไว้ในตัวแปรแบบ int ที่ชื่อ LDRread
+      Serial.print("LDR Read = ");        //แล้วแสดงข้อมูลค่า LDR ที่อ่านได้
+      Serial.println(LDRread);            //ด้วยการแสดงค่าตัวแปร LDRread ทาง Serial Monitor
+ 
+ if (isnan(tempread) || isnan(humidread) || tempread > 100 || humidread > 100)
+      {
+          tempread = 0.0;       // ถ้าอ่านค่าไม่ได้ หรืออ่านค่าได้มากกว่า 100
+          humidread = 0.0;      // ให้แสดงค่าเป็น 0 แทน
+      }
+ 
+ int tempread_decimal = (tempread - (int)tempread) * 100;      // เก็บส่วนของตัวเลขที่อยู่หลังจุดทศนิยม ไปเป็นแบบ int
+ int humidread_decimal = (humidread - (int)humidread) * 100;   // เช่น 35.87 จะเก็บ 87 ไว้ในตัวแปร
+ 
+ if(LDRread<0)   
+      {
+        LDRread = 0;          //ถ้าอ่านค่าได้น้อยกว่า 0 ให้แสดงค่าเป็น 0 แทน
+      }
+ else if(LDRread>LDRMax)
+      {
+        LDRread = LDRMax;     //ถ้าอ่านค่าได้มากกว่าค่าสูงสุดที่กำหนดไว้ ให้แสดงค่าเป็นค่าสูงสุดแทน
+      }
+ 
+ int lightread = map(LDRread,0,LDRMax,0,10);   // ทำการ map ค่าใหม่ จากค่าต่ำสุด ถึงค่าสูงสุด ให้เป็นจาก 0 ถึง 10 แทน
+
+ sprintf(temp,"%d.%d", (int)tempread,tempread_decimal);      // ยัดค่าตัวแปร int เข้าไปในตัวแปร char โดยมีรูปแบบ
+ sprintf(humid,"%d.%d", (int)humidread,humidread_decimal);   // %d.%d = ส่วนจำนวนเต็ม.ส่วนทศนิยม (จะ chat ตัวแปรนี้ไป)
+ 
+ sprintf(light,"%d",lightread);                              // และเก็บค่า LDR ที่ทำให้เป็น 0-10 แล้ว เข้าไปในตัวแปร char เหมือนกัน
+ 
+      microgear.chat("Teeranai059/Temperature",temp);     // ทำการ chat ตัวแปรต่างๆ ออกไป
+      microgear.chat("Teeranai059/Humidity",humid);       // โดยใช้ชื่อผู้รับเป็น "SmartSensor/Temp,Humid,LightLevel"
+      microgear.chat("Teeranai059/LightLevel",light);     // โดยจะไปรับค่านี้ในเกจแสดงผลอีกที
+    }
+ else
+    {
+      Serial.println("connection lost, reconnect...");
+      microgear.connect(APPID);
+ delay(timer);
+      timer+=100;
+    }
+
+
+  
+ delay(RefreshTime);   // รอเวลาเป็นจำนวนเท่ากับที่ตั้งไว้ในตัวแปร RefreshTime
+}
