@@ -64,6 +64,9 @@
 
 ![alt text](https://scontent.fbkk13-1.fna.fbcdn.net/v/t34.0-12/20706422_10203632449488293_139098640_n.jpg?oh=b5ed1e80ffeec47abe8ffda05b8c70f1&oe=598D8EC4)
 
+# วิธีการดักข้อมูลโดยใช้โปรแกรม Wireshark
+ 
+ ![alt text](https://scontent.fbkk13-1.fna.fbcdn.net/v/t34.0-12/20750438_1550147938378235_831784712_n.png?oh=5fd6c19007f14112af1df8bc02907bd5&oe=598C6B6B)
 
 # รูปภาพการวัดค่า SleepMode1
 
